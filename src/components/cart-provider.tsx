@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Product } from "@/data/products";
 
 export type CartLine = {
@@ -24,6 +24,7 @@ const STORAGE_KEY = "marketly-cart-v1";
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
@@ -31,14 +32,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       if (stored) setItems(JSON.parse(stored) as CartLine[]);
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      setHydrated(true);
     }
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+    if (hydrated) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items, hydrated]);
 
-  const addItem = (product: Product, options: Record<string, string>, quantity = 1) => {
+  const addItem = useCallback((product: Product, options: Record<string, string>, quantity = 1) => {
     setItems((current) => {
       const existing = current.find((item) =>
         item.productId === product.id && JSON.stringify(item.options) === JSON.stringify(options)
@@ -56,13 +59,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         options
       }];
     });
-  };
+  }, []);
 
   const value = useMemo(() => ({
     items,
     cartCount: items.reduce((total, item) => total + item.quantity, 0),
     addItem
-  }), [items]);
+  }), [items, addItem]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
