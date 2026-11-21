@@ -53,7 +53,11 @@ export default function HomePage() {
   }), [activeCategory, query]);
 
   const addToCart = (id: number) => {
-    const product = products.find((item) => item.id === id);\n    if (product) addItem(product, {});
+    const product = products.find((item) => item.id === id);
+    if (product) {
+      const defaultOptions = Object.fromEntries(product.options.map((option) => [option.label, option.values[0]]));
+      addItem(product, defaultOptions);
+    }
     setNotice("Added to your cart");
     window.setTimeout(() => setNotice(""), 1800);
   };
