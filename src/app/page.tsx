@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
+import { products } from "@/data/products";
+import { useCart } from "@/components/cart-provider";
 import {
   ArrowRight, Search, ShoppingBag, Menu, Heart, Star, Truck, ShieldCheck,
   Headphones, ChevronRight, Store, BadgePercent, X, SlidersHorizontal
@@ -37,7 +40,7 @@ const vendors = [
 const money = (amount: number) => "₦" + amount.toLocaleString("en-NG");
 
 export default function HomePage() {
-  const [cart, setCart] = useState<number[]>([]);
+  const { addItem, cartCount } = useCart();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -50,7 +53,7 @@ export default function HomePage() {
   }), [activeCategory, query]);
 
   const addToCart = (id: number) => {
-    setCart((current) => [...current, id]);
+    const product = products.find((item) => item.id === id);\n    if (product) addItem(product, {});
     setNotice("Added to your cart");
     window.setTimeout(() => setNotice(""), 1800);
   };
@@ -89,7 +92,7 @@ export default function HomePage() {
             <button aria-label="Wishlist" className="hidden h-10 w-10 place-items-center rounded-full transition hover:bg-black/5 sm:grid"><Heart size={19} /></button>
             <button className="relative flex h-10 items-center gap-2 rounded-full bg-brand px-4 text-xs font-bold text-white transition hover:bg-[#105737]">
               <ShoppingBag size={16} /> <span className="hidden sm:inline">My bag</span>
-              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-lime px-1 text-[10px] font-black text-ink">{cart.length}</span>
+              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-lime px-1 text-[10px] font-black text-ink">{cartCount}</span>
             </button>
             <button aria-label="Toggle menu" onClick={() => setMobileMenu(!mobileMenu)} className="grid h-10 w-10 place-items-center rounded-full border border-black/10 lg:hidden">{mobileMenu ? <X size={19} /> : <Menu size={19} />}</button>
           </div>
@@ -164,14 +167,14 @@ export default function HomePage() {
         {visibleProducts.length ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4">
           {visibleProducts.map((product) => <article key={product.id} className="product-card group overflow-hidden rounded-[20px] bg-white shadow-[0_2px_14px_rgba(22,40,28,.035)] transition hover:-translate-y-1 hover:shadow-soft">
             <div className="relative aspect-[1/1.02] overflow-hidden bg-[#eceee9]">
-              <img src={product.image} alt={product.name} className="product-image h-full w-full object-cover" />
+              <Link href={`/products/${product.id}`} aria-label={`View ${product.name}`}><img src={product.image} alt={product.name} className="product-image h-full w-full object-cover" /></Link>
               <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1.5 text-[8px] font-black tracking-[1px] text-brand backdrop-blur">{product.tag}</span>
               <button aria-label="Add to wishlist" className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-ink transition hover:bg-white hover:text-rose-500"><Heart size={15} /></button>
               <button onClick={() => addToCart(product.id)} className="absolute bottom-3 left-3 right-3 flex translate-y-2 items-center justify-center gap-2 rounded-full bg-ink/95 py-2.5 text-[10px] font-bold text-white opacity-0 transition group-hover:translate-y-0 group-hover:opacity-100 max-sm:hidden"><ShoppingBag size={13} /> Add to bag</button>
             </div>
             <div className="p-3 sm:p-4">
               <p className="truncate text-[9px] font-semibold text-muted">{product.vendor}</p>
-              <h3 className="mt-1 line-clamp-2 min-h-[34px] text-[11px] font-bold leading-4 sm:text-xs">{product.name}</h3>
+              <h3 className="mt-1 line-clamp-2 min-h-[34px] text-[11px] font-bold leading-4 sm:text-xs"><Link href={`/products/${product.id}`} className="hover:text-brand">{product.name}</Link></h3>
               <div className="mt-2 flex items-center gap-1 text-[9px] text-muted"><Star size={11} className="fill-[#e6b94d] text-[#e6b94d]" /><strong className="text-ink">{product.rating}</strong><span>({product.reviews})</span></div>
               <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-0.5"><span className="text-sm font-black">{money(product.price)}</span><span className="text-[9px] text-muted line-through">{money(product.old)}</span></div>
               <button onClick={() => addToCart(product.id)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-brand/20 py-2 text-[10px] font-bold text-brand transition hover:bg-brand hover:text-white sm:hidden"><ShoppingBag size={12} /> Add to bag</button>
