@@ -19,7 +19,7 @@ const categories = [
 
 const products = [
   { id: 1, name: "Everyday Classic Sneakers", vendor: "Northside Collective", price: 28500, old: 36000, rating: 4.8, reviews: 124, tag: "BESTSELLER", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=85", category: "Fashion" },
-  { id: 2, name: "Wireless Noise-Cancelling Headphones", vendor: "SoundHub Store", price: 64500, old: 78000, rating: 4.7, reviews: 89, tag: "HOT DEAL", image: "https://images.unsplash.com/photo-150 headphones?w=700&q=85", category: "Phones & Tech" },
+  { id: 2, name: "Wireless Noise-Cancelling Headphones", vendor: "SoundHub Store", price: 64500, old: 78000, rating: 4.7, reviews: 89, tag: "HOT DEAL", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=85", category: "Phones & Tech" },
   { id: 3, name: "Minimal Ceramic Table Set", vendor: "The Home Edit", price: 42000, old: 50000, rating: 4.9, reviews: 56, tag: "NEW", image: "https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?w=700&q=85", category: "Home & Living" },
   { id: 4, name: "Daily Glow Skincare Set", vendor: "Olive & Bloom", price: 19500, old: 25000, rating: 4.6, reviews: 203, tag: "POPULAR", image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=700&q=85", category: "Beauty" },
   { id: 5, name: "Premium Everyday Backpack", vendor: "Carry Culture", price: 32000, old: 39000, rating: 4.8, reviews: 71, tag: "LIMITED", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&q=85", category: "Fashion" },
