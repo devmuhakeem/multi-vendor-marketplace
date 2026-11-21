@@ -26,7 +26,7 @@ export const products: Product[] = [
   {
     id: 1, name: "Everyday Classic Sneakers", vendor: "Northside Collective", price: 28500, old: 36000, rating: 4.8, reviews: 124, tag: "BESTSELLER", category: "Fashion",
     image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&q=90",
-    images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&q=90", "https://images.unsplash.com/photo-149鞋?w=1000&q=85", "https://images.unsplash.com/photo-1460353581641-37b add?w=1000&q=85"],
+    images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1000&q=90", "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=1000&q=85", "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?w=1000&q=85"],
     description: "An easy-to-style everyday sneaker designed for comfort from morning errands to evening plans. A versatile addition to your everyday rotation.",
     features: ["Comfort-focused everyday fit", "Versatile casual styling", "Durable rubber outsole", "Easy to pair with everyday outfits"],
     options: [{ label: "Size", values: ["39", "40", "41", "42", "43", "44"] }, { label: "Colour", values: ["Red", "White", "Black"] }],
