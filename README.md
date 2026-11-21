@@ -21,9 +21,9 @@ A responsive multi-vendor marketplace built with Next.js, TypeScript, Tailwind C
 - PostgreSQL relational schema managed by Prisma
 - User accounts with hashed passwords and signed, HTTP-only session cookies
 - Customer registration, login, logout and current-session endpoints
-- Vendor application workflow with pending approval status
+- Vendor application workflow with pending approval status and administrator review endpoint
 - Public product catalogue API and approved-vendor product listing endpoint
-- Authenticated order endpoint with server-side price lookup and transactional stock reservation
+- Authenticated order creation and customer order-history endpoints with server-side price lookup, database coupon redemption and transactional stock reservation
 - Order, vendor, coupon and wallet-ledger data models
 - Database health endpoint
 
@@ -76,7 +76,9 @@ Open [http://localhost:3000](http://localhost:3000).
 | POST | `/api/vendors/apply` | Submit vendor application |
 | GET | `/api/products` | Browse approved vendors' products |
 | POST | `/api/products` | Create a product for an approved vendor |
-| POST | `/api/orders` | Create an order and reserve stock |
+| GET | `/api/orders` | View the signed-in customer's order history |
+| POST | `/api/orders` | Create an order, redeem an eligible database coupon and reserve stock |
+| PATCH | `/api/admin/vendors/:vendorId/review` | Approve, reject or suspend a vendor (admin only) |
 
 The order endpoint accepts product IDs and quantities, then calculates prices from database records. It does not trust prices sent by the browser. Multi-vendor products are stored as line items under one customer order.
 
@@ -84,8 +86,8 @@ The order endpoint accepts product IDs and quantities, then calculates prices fr
 
 - Never commit `.env`, database passwords, or authentication secrets.
 - Customer registration cannot create administrator accounts.
-- Vendor applications remain pending until an administrator approval workflow is implemented.
-- Payment processing, wallet deposits/withdrawals, refunds, coupon redemption, commission settlement, vendor payouts, rate limiting, email verification and password reset are not enabled in this phase.
+- Vendor applications remain pending until an administrator approves them through `PATCH /api/admin/vendors/:vendorId/review`. An administrator account must be provisioned securely outside public registration.
+- Payment processing, wallet deposits/withdrawals, refunds, commission settlement, vendor payouts, rate limiting, email verification and password reset are not enabled in this phase. Coupon redemption is server-validated when a coupon has been created in the database.
 - The existing homepage catalogue and browser cart remain demo data until the frontend is connected to these APIs.
 - The order API creates an unpaid order and reserves inventory in a database transaction. A payment/expiry workflow must be added before production use so unpaid reservations can be released.
 - Use HTTPS in production and configure secrets in your hosting provider.
