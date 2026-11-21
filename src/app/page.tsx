@@ -20,17 +20,6 @@ const categories = [
   { name: "More", icon: "＋", color: "bg-[#e9e9e5]" }
 ];
 
-const products = [
-  { id: 1, name: "Everyday Classic Sneakers", vendor: "Northside Collective", price: 28500, old: 36000, rating: 4.8, reviews: 124, tag: "BESTSELLER", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=700&q=85", category: "Fashion" },
-  { id: 2, name: "Wireless Noise-Cancelling Headphones", vendor: "SoundHub Store", price: 64500, old: 78000, rating: 4.7, reviews: 89, tag: "HOT DEAL", image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=700&q=85", category: "Phones & Tech" },
-  { id: 3, name: "Minimal Ceramic Table Set", vendor: "The Home Edit", price: 42000, old: 50000, rating: 4.9, reviews: 56, tag: "NEW", image: "https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?w=700&q=85", category: "Home & Living" },
-  { id: 4, name: "Daily Glow Skincare Set", vendor: "Olive & Bloom", price: 19500, old: 25000, rating: 4.6, reviews: 203, tag: "POPULAR", image: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=700&q=85", category: "Beauty" },
-  { id: 5, name: "Premium Everyday Backpack", vendor: "Carry Culture", price: 32000, old: 39000, rating: 4.8, reviews: 71, tag: "LIMITED", image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=700&q=85", category: "Fashion" },
-  { id: 6, name: "Smart Fitness Watch", vendor: "Gadget District", price: 58000, old: 69000, rating: 4.5, reviews: 112, tag: "DEAL", image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=700&q=85", category: "Phones & Tech" },
-  { id: 7, name: "Soft Knit Lounge Chair", vendor: "The Home Edit", price: 118000, old: 145000, rating: 4.9, reviews: 38, tag: "TOP RATED", image: "https://images.unsplash.com/photo-1506439773649-6e0eb8cfb237?w=700&q=85", category: "Home & Living" },
-  { id: 8, name: "Classic Leather Wristwatch", vendor: "Time & Form", price: 47500, old: 55000, rating: 4.7, reviews: 94, tag: "TRENDING", image: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=700&q=85", category: "Fashion" }
-];
-
 const vendors = [
   { name: "Northside Collective", type: "Fashion & accessories", initials: "NC", color: "bg-[#e8d9c9]", rating: "4.9", products: "128 products" },
   { name: "The Home Edit", type: "Home, furniture & decor", initials: "HE", color: "bg-[#dce8d8]", rating: "4.8", products: "86 products" },
