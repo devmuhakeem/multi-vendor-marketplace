@@ -13,9 +13,8 @@ const DEMO_COUPONS: Record<string, { label: string; type: "percent" | "fixed"; a
 };
 
 export default function CartPage() {
-  const { items, cartCount, updateQuantity, removeItem } = useCart();
+  const { items, cartCount, updateQuantity, removeItem, couponCode, setCouponCode } = useCart();
   const [couponInput, setCouponInput] = useState("");
-  const [couponCode, setCouponCode] = useState("");
   const [couponMessage, setCouponMessage] = useState("");
   const groups = useMemo(() => {
     const map = new Map<string, typeof items>();

@@ -17,6 +17,8 @@ type CartContextValue = {
   items: CartLine[];
   cartCount: number;
   subtotal: number;
+  couponCode: string;
+  setCouponCode: (code: string) => void;
   addItem: (product: Product, options: Record<string, string>, quantity?: number) => void;
   updateQuantity: (productId: number, options: Record<string, string>, quantity: number) => void;
   removeItem: (productId: number, options: Record<string, string>) => void;
@@ -25,28 +27,38 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "marketly-cart-v1";
+const COUPON_KEY = "marketly-coupon-v1";
 
 const sameLine = (item: CartLine, productId: number, options: Record<string, string>) =>
   item.productId === productId && JSON.stringify(item.options) === JSON.stringify(options);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
+  const [couponCode, setCouponCodeState] = useState("");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored) setItems(JSON.parse(stored) as CartLine[]);
+      setCouponCodeState(window.localStorage.getItem(COUPON_KEY) ?? "");
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(COUPON_KEY);
     } finally {
       setHydrated(true);
     }
   }, []);
 
   useEffect(() => {
-    if (hydrated) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, hydrated]);
+    if (hydrated) {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      if (couponCode) window.localStorage.setItem(COUPON_KEY, couponCode);
+      else window.localStorage.removeItem(COUPON_KEY);
+    }
+  }, [items, couponCode, hydrated]);
+
+  const setCouponCode = useCallback((code: string) => setCouponCodeState(code), []);
 
   const addItem = useCallback((product: Product, options: Record<string, string>, quantity = 1) => {
     setItems((current) => {
@@ -66,17 +78,22 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems((current) => current.filter((item) => !sameLine(item, productId, options)));
   }, []);
 
-  const clearCart = useCallback(() => setItems([]), []);
+  const clearCart = useCallback(() => {
+    setItems([]);
+    setCouponCodeState("");
+  }, []);
 
   const value = useMemo(() => ({
     items,
     cartCount: items.reduce((total, item) => total + item.quantity, 0),
     subtotal: items.reduce((total, item) => total + item.price * item.quantity, 0),
+    couponCode,
+    setCouponCode,
     addItem,
     updateQuantity,
     removeItem,
     clearCart
-  }), [items, addItem, updateQuantity, removeItem, clearCart]);
+  }), [items, couponCode, setCouponCode, addItem, updateQuantity, removeItem, clearCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

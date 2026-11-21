@@ -7,13 +7,14 @@ import { formatNaira } from "@/data/products";
 import { useCart } from "@/components/cart-provider";
 
 export default function CheckoutPage() {
-  const { items, cartCount, subtotal, clearCart } = useCart();
+  const { items, cartCount, subtotal, couponCode, clearCart } = useCart();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ fullName: "", email: "", phone: "", address: "", city: "", state: "", deliveryNote: "" });
   const [error, setError] = useState("");
 
   const delivery = new Set(items.map((item) => item.vendor)).size * 1500;
-  const total = subtotal + delivery;
+  const couponDiscount = couponCode === "WELCOME10" ? subtotal * 0.1 : couponCode === "MARKET500" ? Math.min(subtotal, 500) : 0;
+  const total = subtotal - couponDiscount + delivery;
   const vendors = Array.from(new Set(items.map((item) => item.vendor)));
 
   function update(field: keyof typeof form, value: string) {
@@ -56,7 +57,7 @@ export default function CheckoutPage() {
               </div>
               <div className="rounded-2xl border border-[#e6eae3] bg-white p-5 sm:p-7"><h2 className="text-lg font-extrabold">Payment</h2><p className="mt-2 text-sm leading-6 text-[#69756c]">Payment methods will be connected in a later phase. This preview does not request or store card, bank or wallet credentials.</p><div className="mt-4 rounded-xl bg-[#f5f7f1] p-4 text-sm text-[#667268]">Payment gateway not connected</div></div>
             </section>
-            <aside className="rounded-2xl border border-[#e6eae3] bg-white p-5 sm:p-6 lg:sticky lg:top-6"><h2 className="text-xl font-extrabold">Order summary</h2><div className="mt-4 space-y-3">{vendors.map((vendor) => <div key={vendor} className="border-b border-[#edf0eb] pb-3"><p className="text-xs font-bold text-[#59665d]">{vendor}</p>{items.filter((item) => item.vendor === vendor).map((item) => <div key={item.productId + JSON.stringify(item.options)} className="mt-2 flex justify-between gap-3 text-xs text-[#7a857d]"><span className="min-w-0">{item.name} × {item.quantity}</span><span className="shrink-0 font-semibold text-[#465249]">{formatNaira(item.price * item.quantity)}</span></div>)}</div>)}</div><div className="mt-4 space-y-3 text-sm"><div className="flex justify-between text-[#68746b]"><span>Items ({cartCount})</span><span>{formatNaira(subtotal)}</span></div><div className="flex justify-between text-[#68746b]"><span>Estimated delivery</span><span>{formatNaira(delivery)}</span></div></div><div className="my-5 border-t border-dashed border-[#dce2d9]" /><div className="flex justify-between text-lg font-black"><span>Total</span><span>{formatNaira(total)}</span></div><button type="submit" className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#91b52b] px-5 py-4 text-sm font-extrabold text-[#17211b] hover:bg-[#a5c94a]">Review demo order <ArrowRight className="h-4 w-4" /></button><p className="mt-3 text-center text-[11px] leading-5 text-[#8a968d]">Demo only — this will not create a real order or charge you.</p></aside>
+            <aside className="rounded-2xl border border-[#e6eae3] bg-white p-5 sm:p-6 lg:sticky lg:top-6"><h2 className="text-xl font-extrabold">Order summary</h2><div className="mt-4 space-y-3">{vendors.map((vendor) => <div key={vendor} className="border-b border-[#edf0eb] pb-3"><p className="text-xs font-bold text-[#59665d]">{vendor}</p>{items.filter((item) => item.vendor === vendor).map((item) => <div key={item.productId + JSON.stringify(item.options)} className="mt-2 flex justify-between gap-3 text-xs text-[#7a857d]"><span className="min-w-0">{item.name} × {item.quantity}</span><span className="shrink-0 font-semibold text-[#465249]">{formatNaira(item.price * item.quantity)}</span></div>)}</div>)}</div><div className="mt-4 space-y-3 text-sm"><div className="flex justify-between text-[#68746b]"><span>Items ({cartCount})</span><span>{formatNaira(subtotal)}</span></div><div className="flex justify-between text-[#68746b]"><span>Promo discount{couponCode ? ` (${couponCode})` : ""}</span><span className="font-semibold text-[#66852a]">−{formatNaira(couponDiscount)}</span></div><div className="flex justify-between text-[#68746b]"><span>Estimated delivery</span><span>{formatNaira(delivery)}</span></div></div><div className="my-5 border-t border-dashed border-[#dce2d9]" /><div className="flex justify-between text-lg font-black"><span>Total</span><span>{formatNaira(total)}</span></div><button type="submit" className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#91b52b] px-5 py-4 text-sm font-extrabold text-[#17211b] hover:bg-[#a5c94a]">Review demo order <ArrowRight className="h-4 w-4" /></button><p className="mt-3 text-center text-[11px] leading-5 text-[#8a968d]">Demo only — this will not create a real order or charge you.</p></aside>
           </form>
         )}
       </div>
