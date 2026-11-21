@@ -16,11 +16,18 @@ export type CartLine = {
 type CartContextValue = {
   items: CartLine[];
   cartCount: number;
+  subtotal: number;
   addItem: (product: Product, options: Record<string, string>, quantity?: number) => void;
+  updateQuantity: (productId: number, options: Record<string, string>, quantity: number) => void;
+  removeItem: (productId: number, options: Record<string, string>) => void;
+  clearCart: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
 const STORAGE_KEY = "marketly-cart-v1";
+
+const sameLine = (item: CartLine, productId: number, options: Record<string, string>) =>
+  item.productId === productId && JSON.stringify(item.options) === JSON.stringify(options);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartLine[]>([]);
@@ -43,29 +50,33 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback((product: Product, options: Record<string, string>, quantity = 1) => {
     setItems((current) => {
-      const existing = current.find((item) =>
-        item.productId === product.id && JSON.stringify(item.options) === JSON.stringify(options)
-      );
-      if (existing) {
-        return current.map((item) => item === existing ? { ...item, quantity: item.quantity + quantity } : item);
-      }
-      return [...current, {
-        productId: product.id,
-        name: product.name,
-        vendor: product.vendor,
-        price: product.price,
-        image: product.image,
-        quantity,
-        options
-      }];
+      const existing = current.find((item) => sameLine(item, product.id, options));
+      if (existing) return current.map((item) => sameLine(item, product.id, options) ? { ...item, quantity: item.quantity + quantity } : item);
+      return [...current, { productId: product.id, name: product.name, vendor: product.vendor, price: product.price, image: product.image, quantity, options }];
     });
   }, []);
+
+  const updateQuantity = useCallback((productId: number, options: Record<string, string>, quantity: number) => {
+    setItems((current) => quantity <= 0
+      ? current.filter((item) => !sameLine(item, productId, options))
+      : current.map((item) => sameLine(item, productId, options) ? { ...item, quantity: Math.min(quantity, 99) } : item));
+  }, []);
+
+  const removeItem = useCallback((productId: number, options: Record<string, string>) => {
+    setItems((current) => current.filter((item) => !sameLine(item, productId, options)));
+  }, []);
+
+  const clearCart = useCallback(() => setItems([]), []);
 
   const value = useMemo(() => ({
     items,
     cartCount: items.reduce((total, item) => total + item.quantity, 0),
-    addItem
-  }), [items, addItem]);
+    subtotal: items.reduce((total, item) => total + item.price * item.quantity, 0),
+    addItem,
+    updateQuantity,
+    removeItem,
+    clearCart
+  }), [items, addItem, updateQuantity, removeItem, clearCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

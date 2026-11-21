@@ -11,11 +11,17 @@ A responsive multi-vendor marketplace frontend built with Next.js, TypeScript an
 
 ### Phase 2 — Product discovery and cart foundation
 - Individual product detail routes at `/products/[id]`
-- Product image gallery
-- Product option selection and quantity controls
-- Stock indicators, product highlights and related products
+- Product image gallery and product option selection
 - Shared cart state across pages, persisted in browser local storage
-- Homepage quick-add with default product options
+
+### Phase 3 — Cart and checkout experience
+- Dedicated shopping cart at `/cart`
+- Quantity updates and item removal, including variant-aware cart lines
+- Cart items grouped by vendor with store subtotals
+- Order summary with estimated per-store delivery
+- Frontend demo coupon codes: `WELCOME10` and `MARKET500`
+- Delivery information form and multi-vendor order breakdown at `/checkout`
+- Empty-cart, form-validation and demo confirmation states
 
 ## Run locally
 
@@ -37,7 +43,7 @@ npm start
 
 ## Current limitations
 
-This is still an early frontend build. The catalogue and store information are sample data. Cart contents are stored in the current browser only. Authentication, vendor onboarding and dashboards, database integration, payment processing, order management, wallet funding, commissions and payouts are not implemented yet.
+This is a frontend demonstration using sample catalogue and vendor data. Cart contents are stored in the current browser only. Coupon checks and delivery estimates are frontend demonstrations, not server-validated pricing. Checkout does not create a real order or collect payment. Authentication, database integration, inventory reservation, payment processing, order management, wallet funding, commissions and vendor payouts are not implemented yet.
 
 ## Project direction
 
