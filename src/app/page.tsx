@@ -83,10 +83,10 @@ export default function HomePage() {
 
           <div className="flex shrink-0 items-center gap-2">
             <button aria-label="Wishlist" className="hidden h-10 w-10 place-items-center rounded-full transition hover:bg-black/5 sm:grid"><Heart size={19} /></button>
-            <button className="relative flex h-10 items-center gap-2 rounded-full bg-brand px-4 text-xs font-bold text-white transition hover:bg-[#105737]">
+            <Link href="/cart" aria-label={`Open shopping cart with ${cartCount} items`} className="relative flex h-10 items-center gap-2 rounded-full bg-brand px-4 text-xs font-bold text-white transition hover:bg-[#105737]">
               <ShoppingBag size={16} /> <span className="hidden sm:inline">My bag</span>
               <span className="grid h-5 min-w-5 place-items-center rounded-full bg-lime px-1 text-[10px] font-black text-ink">{cartCount}</span>
-            </button>
+            </Link>
             <button aria-label="Toggle menu" onClick={() => setMobileMenu(!mobileMenu)} className="grid h-10 w-10 place-items-center rounded-full border border-black/10 lg:hidden">{mobileMenu ? <X size={19} /> : <Menu size={19} />}</button>
           </div>
         </div>
